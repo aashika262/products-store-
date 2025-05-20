@@ -25,9 +25,7 @@ export const createProducts = async (req, res) => {
 
   try {
     await newProduct.save();
-    res
-      .status(201)
-      .json({ success: true, message: "Product created successfully" });
+    res.status(201).json({ success: true, data: newProduct });
   } catch (error) {
     console.error("error in create product:", error.message);
     res
@@ -46,10 +44,10 @@ export const updateProducts = async (req, res) => {
       .send({ success: "false", message: "Product not found" });
   }
   try {
-    await Product.findByIdAndUpdate(id, product);
-    res
-      .status(200)
-      .json({ success: true, message: "Product updated successfully" });
+    const updatedProduct = await Product.findByIdAndUpdate(id, product, {
+      new: true,
+    });
+    res.status(200).json({ success: true, data: updatedProduct });
   } catch (error) {
     console.error("error in update product:", error.message);
     res
@@ -60,6 +58,11 @@ export const updateProducts = async (req, res) => {
 
 export const deleteProducts = async (req, res) => {
   const { id } = req.params;
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res
+      .status(404)
+      .send({ success: "false", message: "Product not found" });
+  }
   try {
     await Product.findByIdAndDelete(id);
     res
