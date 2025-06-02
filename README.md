@@ -1,2 +1,1 @@
-# mern-crash-course
- 100 hours mern course projects 
+This is a basic products app using MERN Stack with CRUD functionalities
